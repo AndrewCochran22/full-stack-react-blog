@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
   })
   
   // Respond with success message.
-  return res.status(201).json(newUser)
+  return res.status(201).json({})
 });
 
   router.post('/login', async (req, res) => {
@@ -80,7 +80,11 @@ router.post('/register', async (req, res) => {
     req.session.user = user;
 
     // Respond with user info.
-    res.json(user);
+    res.json({
+      id: user.id,
+      username: user.username,
+      updatedAt: user.updatedAt
+    });
   });
 
   router.get('/logout', (req, res) => {
@@ -91,6 +95,21 @@ router.post('/register', async (req, res) => {
     res.json({
       success: 'Logged out successfully.'
     })
+  })
+
+  router.get('/current', (req, res) => {
+    const { user } = req.session;
+    if (user) {
+      res.json({
+        id: user.id,
+        username: user.username,
+        updatedAt: user.updatedAt
+      });
+    } else {
+      res.status(401).json({
+        error: 'Not Logged in'
+      });
+    }
   })
 
 module.exports = router;
