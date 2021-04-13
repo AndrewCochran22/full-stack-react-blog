@@ -64,4 +64,17 @@ router.post('/:id/comments', checkAuth, async (req, res) => {
 
 })
 
+router.get('/:id/comments', async (req, res) => {
+    const post = await models.Post.findByPk(req.params.id)
+    if (!post) {
+        res.status(404).json({
+            error: "Could not find post with that Id"
+        })
+    }
+
+    const comments = await post.getComments();
+
+    res.json(comments)
+})
+
 module.exports = router;
